@@ -5,15 +5,18 @@ spring:
   application:
     name: location-service
 
+  config:
+    import: configserver:http://localhost:8888
+
   datasource:
     url: jdbc:mysql://localhost:3306/airline_location_db
     username: root
     password: Deva#62010
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
-
     show-sql: true
 
 eureka:
