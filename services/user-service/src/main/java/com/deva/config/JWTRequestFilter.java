@@ -20,6 +20,7 @@ import java.util.Collections;
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter {
 
+    private static final String BEARER_PREFIX = "Bearer ";
     private final UserRepository userRepository;
     private final JWTService jwtService;
 
@@ -31,21 +32,27 @@ public class JWTRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(8, authorizationHeader.length()-1);
-            String email = jwtService.extractUsername(token);
-            User opEmail = userRepository.findByEmail(email);
+        
+        if (authorizationHeader != null && authorizationHeader.startsWith(BEARER_PREFIX)) {
+            try {
+                String token = authorizationHeader.substring(BEARER_PREFIX.length());
+                String email = jwtService.extractUsername(token);
+                User user = userRepository.findByEmail(email);
 
-            if (opEmail != null) {
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(
-                                opEmail,
-                                null,
-                                Collections.singleton(new SimpleGrantedAuthority(opEmail.getUserRole().toString()))
-                        );
+                if (user != null) {
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    user,
+                                    null,
+                                    Collections.singleton(new SimpleGrantedAuthority(user.getUserRole().toString()))
+                            );
 
-                authenticationToken.setDetails(new WebAuthenticationDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    authenticationToken.setDetails(new WebAuthenticationDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
+            } catch (Exception e) {
+                // Log the error but don't block the request - let it proceed to return 401 if needed
+                SecurityContextHolder.clearContext();
             }
         }
 

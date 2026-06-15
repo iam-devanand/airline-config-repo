@@ -44,14 +44,13 @@ public class AuthServiceImpl implements AuthService {
                     .user(UserDTO.builder()
                             .id(user.getId())
                             .email(user.getEmail())
-                            .password(user.getPassword())
                             .phoneNumber(user.getMobileNumber())
                             .role(user.getUserRole())
                             .lastLogin(LocalDateTime.now())
                             .fullName(user.getFullName())
                             .build())
                     .build();
-        }else {
+        } else {
             throw new BadCredentialsException("Bad credentials");
         }
 
@@ -64,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
             throw new Exception("Email already registered.");
         }
 
-        if (userDTO.getRole() == UserRole.ROLE_SYSTEM_ADMIN){
+        if (userDTO.getRole() == UserRole.ROLE_SYSTEM_ADMIN) {
             throw new Exception("You are not allowed to perform signUp with system admin!");
         }
 
@@ -91,7 +90,6 @@ public class AuthServiceImpl implements AuthService {
                         .id(savedUser.getId())
                         .email(savedUser.getEmail())
                         .fullName(savedUser.getFullName())
-                        .password(savedUser.getPassword())
                         .role(savedUser.getUserRole())
                         .phoneNumber(String.valueOf(savedUser.getMobileNumber()))
                         .build())

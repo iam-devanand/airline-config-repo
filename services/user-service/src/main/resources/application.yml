@@ -6,9 +6,9 @@ spring:
     import: configserver:http://localhost:8888
 
   datasource:
-    url: jdbc:mysql://localhost:3306/airline_location_db
-    username: root
-    password: Deva#62010
+    url: ${DB_URL:jdbc:mysql://localhost:3306/airline_location_db}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:Deva#62010}
 
   jpa:
     hibernate:
@@ -16,17 +16,17 @@ spring:
     show-sql: true
 
 server:
-  port: 5001
+  port: ${SERVER_PORT:5001}
 
 jwt:
   algorithm:
-    key: vbkjfvhhrfldsbdfieriieuroiewytfbvbnmbvlshfghuighnfbnbvnxchlkjdfhgjshgjfhghhrueuirfhbvnxm;afjhgd
+    key: ${JWT_SECRET:}
   issuer:
-    name: Devanand Pandey
+    name: ${JWT_ISSUER:Devanand Pandey}
   expiry:
-    duration: 86400000
+    duration: ${JWT_EXPIRY_MS:86400000}
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}

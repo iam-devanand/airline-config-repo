@@ -91,6 +91,12 @@
 			<version>5.0.1</version>
 			<scope>compile</scope>
 		</dependency>
+
+		<!-- OpenAPI / Swagger Documentation -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
